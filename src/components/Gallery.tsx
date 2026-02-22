@@ -1,10 +1,12 @@
 const images = [
-  '/Ekran_goruntusu_2026-02-14_114719.png',
-  '/Ekran_goruntusu_2026-02-14_114207.png',
-  '/Ekran_goruntusu_2026-02-14_114700.png',
-  '/Ekran_goruntusu_2026-02-14_114634.png',
-  '/Ekran_goruntusu_2026-02-14_114818.png',
-  '/Ekran_goruntusu_2026-02-14_114747.png'
+  '/face1.png',
+  '/painting.png',
+  '/face3.png',
+  '/inside.png',
+  '/face2.png',
+  '/outside.png'
+  
+  
 ];
 
 export default function Gallery() {

@@ -1,4 +1,4 @@
-import { MapPin, Phone, CheckCircle, ShieldCheck } from 'lucide-react';
+import { MapPin, Phone, Clock, Instagram, CheckCircle, ShieldCheck } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { supabase } from '../supabase';
 
@@ -36,6 +36,18 @@ export default function Contact() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  // ==== PAZAR GÜNÜ VE GEÇMİŞ TARİH KONTROLÜ ====
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = new Date(e.target.value);
+    // 0 numaralı gün Pazar'dır
+    if (selected.getDay() === 0) { 
+      alert("İşletmemiz Pazar günleri kapalıdır. Lütfen başka bir gün seçiniz.");
+      setSelectedDate('');
+    } else {
+      setSelectedDate(e.target.value);
+    }
   };
 
   // 1. AŞAMA: DOĞRULAMA KODU GÖNDERME
@@ -120,25 +132,68 @@ export default function Contact() {
 
         <div className="grid md:grid-cols-2 gap-12">
           {/* SOL TARAF: İLETİŞİM */}
-          <div className="space-y-8">
+          <div className="flex flex-col gap-8">
+            
+            {/* Adres */}
             <div className="flex items-start gap-4">
-              <div className="bg-amber-500 p-3 rounded-lg"><MapPin className="w-6 h-6 text-slate-900" /></div>
+              <div className="bg-amber-500 p-3 rounded-xl text-slate-900 shadow-md">
+                <MapPin size={24} />
+              </div>
               <div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">Adres</h3>
-                <p className="text-gray-600">İstanbul, Türkiye</p>
+                <h3 className="text-xl font-bold text-slate-900">Adres</h3>
+                <p className="text-red-600">İstanbul, Türkiye </p>
+                <p className="text-gray-600 mt-1">Halkalı Merkez Mahallesi, 1. Posta Sokak, No:10P, Cadde24 Çarşı, 34303 Küçükçekmece/İstanbul</p>
+                {/* Harita Linki Güncellendi */}
+                <a 
+                  href="https://www.google.com/maps/place/Erkek+Kuaf%C3%B6r%C3%BC+Murat+Do%C4%9Fan/@41.0368764,28.7819614,16.98z/data=!4m14!1m7!3m6!1s0x14caa43991a835f3:0x82ef01e4387bc715!2sCadde24!8m2!3d41.0368707!4d28.7845748!16s%2Fg%2F11c1_vxjbr!3m5!1s0x14caa5f9592c8b3d:0x45deafb73e2fcbad!8m2!3d41.0363607!4d28.7852399!16s%2Fg%2F11x644pn9h!5m1!1e2?entry=ttu&g_ep=EgoyMDI2MDIxOC4wIKXMDSoASAFQAw%3D%3D" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-amber-600 hover:text-amber-700 text-sm font-medium mt-1 inline-block"
+                >
+                  Haritada Görüntüle →
+                </a>
               </div>
             </div>
+
+            {/* Telefon */}
             <div className="flex items-start gap-4">
-              <div className="bg-amber-500 p-3 rounded-lg"><Phone className="w-6 h-6 text-slate-900" /></div>
+              <div className="bg-amber-500 p-3 rounded-xl text-slate-900 shadow-md">
+                <Phone size={24} />
+              </div>
               <div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">Telefon</h3>
-                <p className="text-gray-600">+90 534 439 39 46</p>
+                <h3 className="text-xl font-bold text-slate-900">Telefon</h3>
+                <p className="text-gray-600 mt-1">+90 534 439 39 46</p>
               </div>
             </div>
+
+            {/* Çalışma Saatleri */}
+            <div className="flex items-start gap-4">
+              <div className="bg-amber-500 p-3 rounded-xl text-slate-900 shadow-md">
+                <Clock size={24} />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-slate-900">Çalışma Saatleri</h3>
+                <p className="text-gray-600 mt-1">Hafta İçi: 09:00 - 21:30</p>
+                <p className="text-gray-600">Cumartesi: 09:00 - 23:00</p>
+                <p className="text-red-900 font-medium">Pazar: Kapalı</p>
+              </div>
+            </div>
+
+            {/* Sosyal Medya */}
+            <div className="flex items-start gap-4">
+              <div className="bg-amber-500 p-3 rounded-xl text-slate-900 shadow-md">
+                <Instagram size={24} />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-slate-900">Sosyal Medya</h3>
+                <p className="text-gray-600 mt-1">@muratdogankuafor</p>
+              </div>
+            </div>
+
           </div>
 
           {/* SAĞ TARAF: GÜVENLİ FORM */}
-          <div className="bg-slate-900 rounded-xl p-8 text-white relative">
+          <div className="bg-slate-900 rounded-xl p-8 text-white relative shadow-xl">
             <h3 className="text-2xl font-bold mb-6">Randevu Formu</h3>
             
             {success && (
@@ -179,7 +234,14 @@ export default function Contact() {
 
                 <div>
                   <label className="block text-sm font-medium mb-2">Tarih Seçin</label>
-                  <input type="date" required value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg focus:border-amber-500 text-white" />
+                  <input 
+                    type="date" 
+                    required 
+                    min={new Date().toISOString().split('T')[0]} // Geçmiş tarihi engeller
+                    value={selectedDate} 
+                    onChange={handleDateChange} // Pazar gününü engeller
+                    className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg focus:border-amber-500 text-white" 
+                  />
                 </div>
 
                 {selectedDate && (
