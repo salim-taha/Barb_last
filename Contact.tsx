@@ -1,10 +1,11 @@
 import { MapPin, Phone, Clock, Instagram, CheckCircle, ShieldCheck } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { supabase } from '../supabase';
+import emailjs from '@emailjs/browser';
 
 export default function Contact() {
   // FORM BİLGİLERİ (Berber eklendi)
-  const [formData, setFormData] = useState({ name: '', phone: '', email: '', service: 'Saç Kesimi', barber: 'Murat Bey' });
+  const [formData, setFormData] = useState({ name: '', phone: '', email: '', service: 'Saç Kesimi - 600 TL', barber: 'Murat Bey' });
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   
@@ -114,6 +115,37 @@ export default function Contact() {
       alert('Randevu kaydedilirken bir hata oluştu.');
       console.error(dbError);
     } else {
+      // ==== YENİ EKLENEN BİLDİRİM MAİLİ KISMI ====
+      emailjs.send(
+        'service_8a5yygb', // EmailJS'den aldığın Service ID
+        'template_6pcv0rx', // EmailJS'den aldığın Template ID
+        {
+          customer_name: formData.name,
+          customer_phone: formData.phone,
+          service: formData.service,
+          barber: formData.barber,
+          date: selectedDate,
+          time: selectedTime
+        },
+        
+        'QrJDTCNTUutTEB0lv' // EmailJS'den aldığın Public Key
+      ).then(() => {
+        console.log("Kuaföre bildirim maili başarıyla gönderildi!");
+      }).catch((err) => {
+        console.error("Bildirim maili gönderilemedi:", err);
+      });
+
+      emailjs.send('service_8a5yygb', 'template_kdr6m0w', {
+        customer_name: formData.name,
+        customer_email: formData.email, // Müşterinin mailine gider
+        service: formData.service,
+        barber: formData.barber,
+        date: selectedDate,
+        time: selectedTime
+      }, 'QrJDTCNTUutTEB0lv');
+      
+      // ============================================
+
       setSuccess(true);
       setStep(1); 
       setFormData({ name: '', phone: '', email: '', service: 'Saç Kesimi', barber: 'Murat Bey' });
@@ -123,7 +155,6 @@ export default function Contact() {
       setBookedTimes([]);
       setTimeout(() => setSuccess(false), 5000);
     }
-    setLoading(false);
   };
 
   return (
@@ -207,15 +238,40 @@ export default function Contact() {
                       <option value="Kadir Bey">Kadir Bey</option>
                     </select>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Hizmet</label>
-                    <select name="service" value={formData.service} onChange={handleChange} className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg focus:border-amber-500 text-white">
-                      <option>Saç Kesimi</option>
-                      <option>Sakal Bakımı</option>
-                      <option>Komple Bakım</option>
-                      <option>Saç Boyama</option>
-                    </select>
-                  </div>
+                    <div>
+                        <label className="block text-sm font-medium mb-2">Hizmet Seçin (Fiyatlı)</label>
+                        <select name="service" value={formData.service} onChange={handleChange} className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg focus:border-amber-500 text-white">
+                          <optgroup label="Sık Kullanılanlar">
+                            <option>Saç Kesimi - 600 TL</option>
+                            <option>Sakal Tıraşı - 400 TL</option>
+                            <option>Modern Saç Kesimi - 800 TL</option>
+                            <option>Saç Sakal Kesimi - 800 TL</option>
+                          </optgroup>
+                          <optgroup label="Saç Hizmetleri">
+                            <option>Fön / Yıkama Fön - 300 TL</option>
+                            <option>Çocuk Tıraşı - 500 TL</option>
+                            <option>Saç Yıkama - 200 TL</option>
+                            <option>Damat Tıraşı - 3500~5000 TL</option>
+                            <option>Kaş Yanak Alma - 600 TL</option>
+                            <option>Pigmentasyon Cila (Cover) - 500 TL</option>
+                          </optgroup>
+                          <optgroup label="Bakım & Boya">
+                            <option>Saç Bakımı - 1000 TL</option>
+                            <option>Cilt Bakımı - 1000 TL</option>
+                            <option>Saç Boyama - 1000 TL</option>
+                            <option>Sakal Boyama - 500 TL</option>
+                            <option>Bıyık Boyama - 200 TL</option>
+                            <option>Keratin Bakımı - 1500~3000 TL</option>
+                            <option>Brezilya Fönü - 2000 TL</option>
+                            <option>Açma Boyama - 2000~4000 TL</option>
+                            <option>Perma - 2500~5000 TL</option>
+                            <option>Röfle-Meç-Gölge - 2500~5000 TL</option>
+                          </optgroup>
+                          <optgroup label="Diğer">
+                            <option>Makina İle Sırt/Göğüs Alma - 250 TL</option>
+                          </optgroup>
+                        </select>
+                    </div>
                 </div>
 
                 <div>
