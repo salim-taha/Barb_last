@@ -5,25 +5,25 @@ const services = [
     icon: Scissors,
     title: 'Saç Kesimi',
     description: 'Modern ve klasik saç kesim teknikleri ile stilinizi tamamlayın',
-    price: '500₺'
+    price: '600 TL' // Fiyat güncellendi
   },
   {
     icon: Wind,
     title: 'Sakal Bakımı',
-    description: 'Profesyonel ustura traşı ve sakal düzenleme hizmeti',
-    price: '150₺'
+    description: 'Profesyonel ustura tıraşı ve sakal düzenleme hizmeti',
+    price: '400 TL' // Fiyat güncellendi
   },
   {
     icon: Sparkles,
-    title: 'Komple Bakım',
-    description: 'Saç kesimi, sakal bakımı ve yüz maskesi paket hizmet',
-    price: '300₺'
+    title: 'Saç Sakal Kesimi', // İsim güncellendi
+    description: 'Saç kesimi ve sakal bakımının bir arada olduğu paket hizmet',
+    price: '800 TL' // Fiyat güncellendi
   },
   {
     icon: Palette,
     title: 'Saç Boyama',
     description: 'Profesyonel boya uygulaması ve renk danışmanlığı',
-    price: '650₺'
+    price: '1000 TL' // Fiyat güncellendi
   }
 ];
 
