@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+import Admin from './components/Admin';
 import Hero from './components/Hero';
 import Services from './components/Services';
 import About from './components/About';
@@ -6,6 +8,25 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 
 function App() {
+  // ==== GİZLİ KAPI KONTROLÜ ====
+  const [isAdmin, setIsAdmin] = useState(window.location.hash === '#admin');
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      setIsAdmin(window.location.hash === '#admin');
+    };
+
+    // URL'deki #admin kısmını anlık olarak dinliyoruz
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  // Eğer URL'nin sonu #admin ise, normal siteyi Kapat, SADECE Admin panelini göster
+  if (isAdmin) {
+    return <Admin />;
+  }
+  // ==============================
+
   return (
     <div className="min-h-screen bg-white">
       <Hero />
