@@ -20,10 +20,12 @@ export default function Admin() {
       if (session) fetchAppointments();
     });
 
-    supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       if (session) fetchAppointments();
     });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const fetchAppointments = async () => {
@@ -64,7 +66,6 @@ export default function Admin() {
     }
   };
 
-  // 1. GİRİŞ EKRANI (MÜŞTERİLER BURAYI GÖREMEZ)
   if (!session) {
     return (
       <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
@@ -74,8 +75,8 @@ export default function Admin() {
             <p className="text-slate-500 text-sm font-medium">Yönetim Paneli Girişi</p>
           </div>
           <form onSubmit={handleLogin} className="space-y-4">
-            <input type="email" placeholder="E-Posta" required value={email} onChange={e => setEmail(e.target.value)} className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none" />
-            <input type="password" placeholder="Şifre" required value={password} onChange={e => setPassword(e.target.value)} className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none" />
+            <input type="email" placeholder="E-Posta" required value={email} onChange={e => setEmail(e.target.value)} className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none text-slate-900" />
+            <input type="password" placeholder="Şifre" required value={password} onChange={e => setPassword(e.target.value)} className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none text-slate-900" />
             <button type="submit" disabled={loading} className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-slate-800 transition-all shadow-lg">
               {loading ? 'Giriş Yapılıyor...' : 'Panele Giriş Yap'}
             </button>
@@ -85,10 +86,8 @@ export default function Admin() {
     );
   }
 
-  // 2. ANA YÖNETİM PANELİ
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
-      {/* ÜST BAR */}
       <nav className="bg-white border-b border-slate-200 px-6 py-4 sticky top-0 z-10 shadow-sm">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2">
@@ -107,9 +106,8 @@ export default function Admin() {
       </nav>
 
       <main className="max-w-7xl mx-auto p-4 md:p-8">
-        {/* HIZLI EKLEME FORMU */}
         {showAddForm && (
-          <div className="bg-white p-6 rounded-2xl shadow-md border border-amber-100 mb-8 animate-in slide-in-from-top duration-300">
+          <div className="bg-white p-6 rounded-2xl shadow-md border border-amber-100 mb-8">
             <h3 className="text-lg font-bold text-slate-900 mb-4">Yeni Manuel Randevu (Telefon/Dükkan)</h3>
             <form onSubmit={handleAdd} className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
               <input type="text" placeholder="Müşteri Adı" required value={newAppt.name} onChange={e => setNewAppt({...newAppt, name: e.target.value})} className="px-4 py-2 border rounded-lg" />
@@ -125,8 +123,7 @@ export default function Admin() {
           </div>
         )}
 
-        {/* RANDEVU LİSTESİ */}
-        <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden text-slate-900">
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
@@ -148,19 +145,19 @@ export default function Admin() {
                         <div className="flex items-center gap-3">
                           <div className="bg-slate-100 p-2 rounded-full text-slate-400"><User size={20} /></div>
                           <div>
-                            <p className="font-bold text-slate-900">{apt.name}</p>
+                            <p className="font-bold">{apt.name}</p>
                             <p className="text-xs text-slate-500 flex items-center gap-1"><Phone size={12} /> {apt.phone || 'Yok'}</p>
                           </div>
                         </div>
                       </td>
                       <td className="p-5">
-                        <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                        <div className="flex items-center gap-2 text-sm font-medium">
                           <Scissors size={14} className="text-amber-500" /> {apt.service}
                         </div>
                       </td>
                       <td className="p-5">
                         <div className="flex flex-col">
-                          <span className="text-sm font-bold text-slate-900">{apt.date}</span>
+                          <span className="text-sm font-bold">{apt.date}</span>
                           <span className="text-xs text-amber-600 flex items-center gap-1 font-bold"><Clock size={12} /> {apt.time}</span>
                         </div>
                       </td>
@@ -170,7 +167,7 @@ export default function Admin() {
                         </span>
                       </td>
                       <td className="p-5 text-center">
-                        <button onClick={() => handleDelete(apt.id)} className="text-red-400 hover:text-red-600 p-2 hover:bg-red-50 rounded-lg transition-all" title="Randevuyu İptal Et">
+                        <button onClick={() => handleDelete(apt.id)} className="text-red-400 hover:text-red-600 p-2 hover:bg-red-50 rounded-lg transition-all">
                           <Trash2 size={20} />
                         </button>
                       </td>
