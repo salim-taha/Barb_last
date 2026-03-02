@@ -8,7 +8,7 @@ export default function Hero() {
       <nav className="relative z-10 flex justify-between items-center px-8 py-6">
         <div className="flex items-center gap-3">
           <Scissors className="w-8 h-8 text-amber-500" />
-          <span className="text-2xl font-bold text-white">Murat Doğan</span>
+          <a href="#admin" className="text-2xl font-bold text-white cursor-default"> Murat Doğan </a>
         </div>
         <div className="hidden md:flex gap-8 text-white">
           <a href="#services" className="hover:text-amber-500 transition-colors">Hizmetler</a>
