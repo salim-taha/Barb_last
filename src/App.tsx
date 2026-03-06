@@ -6,6 +6,7 @@ import About from './components/About';
 import Gallery from './components/Gallery';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import Reviews from './components/Reviews';
 
 function App() {
   // ==== GİZLİ KAPI KONTROLÜ ====
@@ -32,6 +33,7 @@ function App() {
       <Hero />
       <Services />
       <About />
+      <Reviews />
       <Gallery />
       <Contact />
       <Footer />
